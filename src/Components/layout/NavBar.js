@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
-export default class NavBar extends Component {
-	render() {
-		return (
-			<nav className='navbar bg-primary'>
-				<h2>
-					<i className={this.props.icon} />
-					{this.props.title}
-				</h2>
-			</nav>
-		)
-	}
+export default function NavBar(props) {
+	const { title, icon } = props
+
+	return (
+		<nav className='navbar bg-primary'>
+			<h2>
+				<i className={icon} />
+				{title}
+			</h2>
+		</nav>
+	)
 }
 
 //Prop Type for Default Props

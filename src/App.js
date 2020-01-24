@@ -1,10 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import './App.css'
 import NavBar from './Components/layout/NavBar'
 import Users from './Components/Users/Users'
 import axios from 'axios'
 import Search from './Components/Users/Search'
 import Alert from './Components/layout/Alert'
+import { Switch, Route } from 'react-router-dom'
+import { About } from './Components/single_pages/About'
 
 export default class App extends Component {
 	state = {
@@ -41,6 +43,7 @@ export default class App extends Component {
 		this.setState({ users: [...this.state.defaultUsers], loading: false })
 	}
 
+	//Alert Validation for Input
 	setAlert = (errorMessage, type) => {
 		this.setState({ alert: { errorMessage, type } })
 	}
@@ -57,13 +60,19 @@ export default class App extends Component {
 				<NavBar />
 				<div className='containter'>
 					<Alert alert={this.state.alert} />
-					<Search
-						searchUsers={this.searchUsers}
-						clearUsers={this.clearUsers}
-						setAlert={this.setAlert}
-						closeAlert={this.closeAlert}
-					/>
-					<Users users={users} loading={loading} />
+					<Switch>
+						<Route
+							exact
+							path='/'
+							render={props => (
+								<Fragment>
+									<Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} setAlert={this.setAlert} closeAlert={this.closeAlert} />
+									<Users users={users} loading={loading} />
+								</Fragment>
+							)}
+						/>
+						<Route exact path='/about' component={About} />
+					</Switch>
 				</div>
 			</div>
 		)

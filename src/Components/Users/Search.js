@@ -25,17 +25,11 @@ export class Search extends Component {
 		return (
 			<div>
 				<form className='form' onSubmit={this.handleFormSubmit}>
-					<input
-						type='text'
-						name='text'
-						placeholder='Search Users...'
-						value={this.state.text}
-						onChange={this.onChange}
-					></input>
+					<input type='text' name='text' placeholder='Search Users...' value={this.state.text} onChange={this.onChange}></input>
 					<input type='submit' value='Search' className='btn btn-dark btn-block'></input>
 				</form>
 				<button className='btn btn-light btn-block' onClick={this.props.clearUsers}>
-					Home
+					Clear
 				</button>
 			</div>
 		)

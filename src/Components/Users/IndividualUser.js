@@ -9,7 +9,7 @@ export default class IndividualUser extends Component {
 		this.props.getUser(this.props.match.params.login)
 	}
 
-	count = type => {
+	countBadges = type => {
 		if (this.props.user[type] > 10000) {
 			return this.props.user[type].toString().slice(0, 2) + 'k'
 		} else if (this.props.user[type] > 100000) {
@@ -48,12 +48,6 @@ export default class IndividualUser extends Component {
 				<Link to='/' className='btn btn-light'>
 					Back To Search Form
 				</Link>
-				hireable:
-				{hireable ? (
-					<i className='fas fa-check text-success'></i>
-				) : (
-					<i className='fas fa-times-circle text-danger'></i>
-				)}
 				<div className='card grid-2'>
 					<div className='all-center'>
 						<img
@@ -62,8 +56,8 @@ export default class IndividualUser extends Component {
 							alt=''
 							style={{ width: '150px' }}
 						></img>
-
 						<h1>{name}</h1>
+
 						{location && (
 							<Fragment>
 								<h3>Location: {location}</h3>
@@ -110,14 +104,26 @@ export default class IndividualUser extends Component {
 									</Fragment>
 								)}
 							</li>
+							<li>
+								<h2>Hireable:</h2>
+								{hireable ? (
+									<i className='fas fa-check text-success'>Hire Me</i>
+								) : (
+									<i className='fas fa-times-circle text-danger'></i>
+								)}
+							</li>
 						</ul>
 					</div>
 				</div>
 				<div className='card text-center'>
-					<div className='badge badge-primary'>Followers: {this.count('followers')}</div>
-					<div className='badge badge-success'>Following: {this.count('following')}</div>
-					<div className='badge badge-danger'>Public Repos: {this.count('public_repos')}</div>
-					<div className='badge badge-dark'>Public Gists: {this.count('public_gists')}</div>
+					<div className='badge badge-primary'>Followers: {this.countBadges('followers')}</div>
+					<div className='badge badge-success'>Following: {this.countBadges('following')}</div>
+					<div className='badge badge-white'>
+						Public Repos: {this.countBadges('public_repos')}
+					</div>
+					<div className='badge badge-dark'>
+						Public Gists: {this.countBadges('public_gists')}
+					</div>
 				</div>
 			</Fragment>
 		)

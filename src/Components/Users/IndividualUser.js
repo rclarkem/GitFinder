@@ -9,6 +9,18 @@ export default class IndividualUser extends Component {
 		this.props.getUser(this.props.match.params.login)
 	}
 
+	count = type => {
+		if (this.props.user[type] > 10000) {
+			return this.props.user[type].toString().slice(0, 2) + 'k'
+		} else if (this.props.user[type] > 100000) {
+			return this.props.user[type].toString().slice(0, 3) + 'k'
+		} else if (this.props.user[type] > 1000000) {
+			return this.props.user[type].toString().slice(0, 1) + 'm'
+		} else {
+			return this.props.user[type]
+		}
+	}
+
 	render() {
 		const {
 			name,
@@ -100,6 +112,12 @@ export default class IndividualUser extends Component {
 							</li>
 						</ul>
 					</div>
+				</div>
+				<div className='card text-center'>
+					<div className='badge badge-primary'>Followers: {this.count('followers')}</div>
+					<div className='badge badge-success'>Following: {this.count('following')}</div>
+					<div className='badge badge-danger'>Public Repos: {this.count('public_repos')}</div>
+					<div className='badge badge-dark'>Public Gists: {this.count('public_gists')}</div>
 				</div>
 			</Fragment>
 		)

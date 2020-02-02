@@ -14,6 +14,7 @@ export default class App extends Component {
 		defaultUsers: [],
 		users: [],
 		user: {},
+		user_repos: [],
 		loading: false,
 		alert: null,
 	}
@@ -51,10 +52,28 @@ export default class App extends Component {
 		const response = await axios.get(
 			`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
 		)
-		this.setState({
-			user: response.data,
-			loading: false,
-		})
+		this.setState(
+			{
+				user: response.data,
+				loading: false,
+			},
+			() => console.log('Testing User Res', this.state.user),
+		)
+	}
+
+	getUserRepos = async username => {
+		console.log(username)
+		this.setState({ loading: true })
+		const response = await axios.get(
+			`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+		)
+		this.setState(
+			{
+				user_repos: response.data,
+				loading: false,
+			},
+			() => console.log('Testing User Repos', this.state.user_repos),
+		)
 	}
 
 	//Alert Validation for Input
@@ -67,9 +86,9 @@ export default class App extends Component {
 	}
 
 	render() {
-		console.log('STATE', this.state)
-		console.log('User', this.state.user)
-		const { users, loading } = this.state
+		// console.log('STATE', this.state)
+		// console.log('User', this.state.user)
+		const { users, loading, user_repos, user } = this.state
 		return (
 			<div className='App'>
 				<NavBar />
@@ -97,9 +116,11 @@ export default class App extends Component {
 							render={props => (
 								<IndividualUser
 									{...props}
-									user={this.state.user}
+									user={user}
+									user_repos={user_repos}
+									getUserRepos={this.getUserRepos}
 									getUser={this.getUser}
-									loading={this.state.loading}
+									loading={loading}
 								/>
 							)}
 						/>

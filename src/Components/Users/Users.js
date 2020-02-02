@@ -10,6 +10,7 @@ const userStyle = {
 }
 
 const Users = props => {
+	console.log(props)
 	const { users, loading } = props
 	if (loading) {
 		return <Spinner />
@@ -17,7 +18,14 @@ const Users = props => {
 		return (
 			<div style={userStyle}>
 				{users.map(user => {
-					return <UserDetails key={user.id} user={user} />
+					return (
+						<UserDetails
+							key={user.id}
+							user={user}
+							getUser={props.getUser}
+							getUserRepos={props.getUserRepos}
+						/>
+					)
 				})}
 			</div>
 		)

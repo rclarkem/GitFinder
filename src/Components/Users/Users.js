@@ -10,7 +10,6 @@ const userStyle = {
 }
 
 const Users = props => {
-	console.log(props)
 	const { users, loading } = props
 	if (loading) {
 		return <Spinner />

@@ -17,12 +17,13 @@ export default class App extends Component {
 		user_repos: [],
 		loading: false,
 		alert: null,
+		pageNum: null,
 	}
 
 	async componentDidMount() {
 		this.setState({ loading: true })
 		const res = await axios.get(
-			`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
 		)
 		this.setState({
 			defaultUsers: res.data,
@@ -52,13 +53,10 @@ export default class App extends Component {
 		const response = await axios.get(
 			`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
 		)
-		this.setState(
-			{
-				user: response.data,
-				loading: false,
-			},
-			() => console.log('Testing User Res', this.state.user),
-		)
+		this.setState({
+			user: response.data,
+			loading: false,
+		})
 	}
 
 	getUserRepos = async username => {
@@ -67,13 +65,10 @@ export default class App extends Component {
 		const response = await axios.get(
 			`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
 		)
-		this.setState(
-			{
-				user_repos: response.data,
-				loading: false,
-			},
-			() => console.log('Testing User Repos', this.state.user_repos),
-		)
+		this.setState({
+			user_repos: response.data,
+			loading: false,
+		})
 	}
 
 	//Alert Validation for Input
@@ -86,7 +81,11 @@ export default class App extends Component {
 	}
 
 	render() {
-		// console.log('STATE', this.state)
+		this.loadNextUsers()
+
+		// alert(counter())
+		console.log(this.state.pageNum)
+		console.log('STATE', this.state.users)
 		// console.log('User', this.state.user)
 		const { users, loading, user_repos, user } = this.state
 		return (

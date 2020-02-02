@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 export default function UserDetails(props) {
-	console.log(props)
 	const { id, login, avatar_url, html_url, name } = props.user
 	return (
 		<div className='card text-center'>

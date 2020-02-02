@@ -8,5 +8,5 @@ export default function Repos({ repos }) {
 	})
 }
 Repos.propTypes = {
-	repost: PropTypes.array.isRequired,
+	repos: PropTypes.array.isRequired,
 }

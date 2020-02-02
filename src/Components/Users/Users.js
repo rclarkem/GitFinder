@@ -2,6 +2,7 @@ import React from 'react'
 import UserDetails from './UserDetails'
 import { Spinner } from '../layout/Spinner'
 import PropTypes from 'prop-types'
+import Button from '../layout/Button'
 
 const userStyle = {
 	display: 'grid',
@@ -10,6 +11,7 @@ const userStyle = {
 }
 
 const Users = props => {
+	console.log(props)
 	const { users, loading } = props
 	if (loading) {
 		return <Spinner />
@@ -26,6 +28,9 @@ const Users = props => {
 						/>
 					)
 				})}
+				{users.length > 1 && (
+					<Button mainFetch={props.mainFetch} text='Load More Main Users' />
+				)}
 			</div>
 		)
 	}

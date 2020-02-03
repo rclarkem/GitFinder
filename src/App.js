@@ -34,6 +34,7 @@ export default function App() {
 		fetchData()
 	}, [])
 
+	// These two functions help iterate through Github API for loadMore() function and mainFetch()
 	const splitLink = linkAdd => {
 		let splittedLink = linkAdd.headers.link.split(' ')[0]
 		let index = splittedLink.indexOf('since') + 5
@@ -58,6 +59,7 @@ export default function App() {
 		setHeaderLink(relLink)
 	}
 
+	// Load more users on the default page
 	const loadMore = () => {
 		setPage(prevPage => prevPage.page)
 		mainFetch()
@@ -80,6 +82,7 @@ export default function App() {
 		setSearched(true)
 	}
 
+	// Clears state for the users to go back to default page
 	const clearUsers = () => {
 		setUsers([...defaultUsers])
 		setLoading(false)
@@ -158,12 +161,3 @@ export default function App() {
 		</div>
 	)
 }
-
-// let splittedLink = res.headers.link.split(' ')[0]
-// let index = splittedLink.indexOf('since') + 5
-// let num = splittedLink.slice([index + 1], -2)
-
-// let relLink = this.relativeLinkTrue(res)
-// console.log(relLink, potentialHeader)
-// if (relLink.includes('next')) {
-// }

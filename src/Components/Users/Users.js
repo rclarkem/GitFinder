@@ -11,8 +11,16 @@ const userStyle = {
 }
 
 const Users = props => {
-	console.log(props)
-	const { users, loading } = props
+	const { users, loading, searched } = props
+
+	const renderButton = () => {
+		if (users.length > 1 && searched !== true) {
+			return <Button mainFetch={props.mainFetch} text='Load More Main Users' />
+		} else if (users.length < 2 && searched === true) {
+			return <Button />
+		}
+	}
+
 	if (loading) {
 		return <Spinner />
 	} else {
@@ -28,9 +36,7 @@ const Users = props => {
 						/>
 					)
 				})}
-				{users.length > 1 && (
-					<Button mainFetch={props.mainFetch} text='Load More Main Users' />
-				)}
+				{renderButton()}
 			</div>
 		)
 	}
@@ -39,6 +45,7 @@ const Users = props => {
 Users.propTypes = {
 	users: PropTypes.array.isRequired,
 	loading: PropTypes.bool.isRequired,
+	searched: PropTypes.bool.isRequired,
 }
 
 export default Users

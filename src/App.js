@@ -9,15 +9,6 @@ import { Switch, Route } from 'react-router-dom'
 import { About } from './Components/single_pages/About'
 import IndividualUser from './Components/Users/IndividualUser'
 
-// let splittedLink = res.headers.link.split(' ')[0]
-// let index = splittedLink.indexOf('since') + 5
-// let num = splittedLink.slice([index + 1], -2)
-
-// let relLink = this.relativeLinkTrue(res)
-// console.log(relLink, potentialHeader)
-// if (relLink.includes('next')) {
-// }
-
 export default class App extends Component {
 	state = {
 		defaultUsers: [],
@@ -28,6 +19,7 @@ export default class App extends Component {
 		alert: null,
 		page: 1,
 		headerLink: null,
+		searched: false,
 	}
 
 	async componentDidMount() {
@@ -96,11 +88,12 @@ export default class App extends Component {
 		this.setState({
 			users: response.data.items,
 			loading: false,
+			searched: true,
 		})
 	}
 
 	clearUsers = () => {
-		this.setState({ users: [...this.state.defaultUsers], loading: false })
+		this.setState({ users: [...this.state.defaultUsers], loading: false, searched: false })
 	}
 
 	getUser = async username => {
@@ -140,7 +133,7 @@ export default class App extends Component {
 		console.log('DEFAULT USERS', this.state.defaultUsers)
 		// console.log('STATE', this.state)
 		console.log('Users', this.state.users)
-		const { users, loading, user_repos, user } = this.state
+		const { users, loading, user_repos, user, searched } = this.state
 		return (
 			<div className='App'>
 				<NavBar />
@@ -158,7 +151,12 @@ export default class App extends Component {
 										setAlert={this.setAlert}
 										closeAlert={this.closeAlert}
 									/>
-									<Users users={users} loading={loading} mainFetch={this.loadMore} />
+									<Users
+										searched={searched}
+										users={users}
+										loading={loading}
+										mainFetch={this.loadMore}
+									/>
 								</Fragment>
 							)}
 						/>
@@ -182,3 +180,12 @@ export default class App extends Component {
 		)
 	}
 }
+
+// let splittedLink = res.headers.link.split(' ')[0]
+// let index = splittedLink.indexOf('since') + 5
+// let num = splittedLink.slice([index + 1], -2)
+
+// let relLink = this.relativeLinkTrue(res)
+// console.log(relLink, potentialHeader)
+// if (relLink.includes('next')) {
+// }

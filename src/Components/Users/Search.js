@@ -8,6 +8,7 @@ export default function Search({ searchUsers, clearUsers, setAlert, closeAlert }
 
 	const handleFormSubmit = e => {
 		e.preventDefault()
+		console.log(text === '')
 		if (text === '') {
 			setAlert('Please enter text', 'light')
 		} else {

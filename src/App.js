@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import './App.css'
 import NavBar from './Components/layout/NavBar'
 import Users from './Components/Users/Users'
@@ -9,176 +9,154 @@ import { Switch, Route } from 'react-router-dom'
 import { About } from './Components/single_pages/About'
 import IndividualUser from './Components/Users/IndividualUser'
 
-export default class App extends Component {
-	state = {
-		defaultUsers: [],
-		users: [],
-		user: {},
-		user_repos: [],
-		loading: false,
-		alert: null,
-		page: 1,
-		headerLink: null,
-		searched: false,
-	}
+export default function App() {
+	const [defaultUsers, setDefaultUsers] = useState([])
+	const [users, setUsers] = useState([])
+	const [user, setUser] = useState({})
+	const [user_repos, setUserRepos] = useState([])
+	const [loading, setLoading] = useState(false)
+	const [alert, setAlertState] = useState(null)
+	const [page, setPage] = useState(1)
+	const [headerLink, setHeaderLink] = useState(null)
+	const [searched, setSearched] = useState(false)
 
-	async componentDidMount() {
-		this.setState({ loading: true })
-		const res = await axios.get(
-			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${this.state.page}`,
-		)
-		this.setState({
-			defaultUsers: res.data,
-			users: res.data,
-			page: this.splitLink(res),
-			loading: false,
-		})
-	}
+	useEffect(() => {
+		setLoading(true)
+		const fetchData = async () => {
+			const res = await axios.get(
+				`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`,
+			)
+			setDefaultUsers(res.data)
+			setUsers(res.data)
+			setPage(splitLink(res))
+			setLoading(false)
+		}
+		fetchData()
+	}, [])
 
-	splitLink = linkAdd => {
+	const splitLink = linkAdd => {
 		let splittedLink = linkAdd.headers.link.split(' ')[0]
 		let index = splittedLink.indexOf('since') + 5
 		let num = splittedLink.slice([index + 1], -2)
 		return num
 	}
 
-	relativeLinkTrue = linkAdd => {
+	const relativeLinkTrue = linkAdd => {
 		return linkAdd.headers.link.split(' ')[1]
 	}
 
-	mainFetch = async () => {
+	const mainFetch = async () => {
 		const res = await axios.get(
-			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${this.state.page}`,
+			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`,
 		)
-		let potentialPageNum = this.splitLink(res)
-		let relLink = this.relativeLinkTrue(res)
+		let potentialPageNum = splitLink(res)
+		let relLink = relativeLinkTrue(res)
 		if (potentialPageNum !== undefined) {
-			this.setState({ page: potentialPageNum })
+			setPage(potentialPageNum)
 		}
-		this.setState({
-			scrolling: false,
-			loading: false,
-			headerLink: relLink,
-		})
+		setLoading(false)
+		setHeaderLink(relLink)
 	}
 
-	loadMore = () => {
-		this.setState(
-			preState => ({
-				page: preState.page,
-				scrolling: true,
-			}),
-			this.mainFetch,
-			fetch(
-				`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${this.state.page}`,
-			)
-				.then(response => response.json())
-				.then(response => {
-					this.setState({ users: [...this.state.users, ...response], scrolling: false })
-				}),
+	const loadMore = () => {
+		setPage(prevPage => prevPage.page)
+		mainFetch()
+		fetch(
+			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`,
 		)
+			.then(response => response.json())
+			.then(response => {
+				setUsers([...users, ...response])
+			})
 	}
 
-	searchUsers = async searchTerm => {
-		this.setState({ loading: true })
+	const searchUsers = async searchTerm => {
+		setLoading(true)
 		const response = await axios.get(
 			`https://api.github.com/search/users?q=${searchTerm}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
 		)
-		console.log(response.headers)
-		this.setState({
-			users: response.data.items,
-			loading: false,
-			searched: true,
-		})
+		setUsers(response.data.items)
+		setLoading(false)
+		setSearched(true)
 	}
 
-	clearUsers = () => {
-		this.setState({ users: [...this.state.defaultUsers], loading: false, searched: false })
+	const clearUsers = () => {
+		setUsers([...defaultUsers])
+		setLoading(false)
+		setSearched(false)
 	}
 
-	getUser = async username => {
-		console.log(username)
-		this.setState({ loading: true })
+	const getUser = async username => {
+		setLoading(true)
 		const response = await axios.get(
 			`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
 		)
-		this.setState({
-			user: response.data,
-			loading: false,
-		})
+		setUser(response.data)
+		setLoading(false)
 	}
 
-	getUserRepos = async username => {
-		console.log(username)
-		this.setState({ loading: true })
+	const getUserRepos = async username => {
+		setLoading(true)
 		const response = await axios.get(
 			`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
 		)
-		this.setState({
-			user_repos: response.data,
-			loading: false,
-		})
+		setUserRepos(response.data)
+		setLoading(false)
 	}
 
 	//Alert Validation for Input
-	setAlert = (errorMessage, type) => {
-		this.setState({ alert: { errorMessage, type } })
+	const setAlert = (errorMessage, type) => {
+		setAlertState({ errorMessage, type })
 	}
 
-	closeAlert = () => {
-		this.setState({ alert: null })
+	const closeAlert = () => {
+		setAlertState(null)
 	}
 
-	render() {
-		console.log('DEFAULT USERS', this.state.defaultUsers)
-		// console.log('STATE', this.state)
-		console.log('Users', this.state.users)
-		const { users, loading, user_repos, user, searched } = this.state
-		return (
-			<div className='App'>
-				<NavBar />
-				<div className='containter'>
-					<Alert alert={this.state.alert} />
-					<Switch>
-						<Route
-							exact
-							path='/'
-							render={props => (
-								<Fragment>
-									<Search
-										searchUsers={this.searchUsers}
-										clearUsers={this.clearUsers}
-										setAlert={this.setAlert}
-										closeAlert={this.closeAlert}
-									/>
-									<Users
-										searched={searched}
-										users={users}
-										loading={loading}
-										mainFetch={this.loadMore}
-									/>
-								</Fragment>
-							)}
-						/>
-						<Route exact path='/about' component={About} />
-						<Route
-							path='/users/:login'
-							render={props => (
-								<IndividualUser
-									{...props}
-									user={user}
-									user_repos={user_repos}
-									getUserRepos={this.getUserRepos}
-									getUser={this.getUser}
-									loading={loading}
+	return (
+		<div className='App'>
+			<NavBar />
+			<div className='containter'>
+				<Alert alert={alert} />
+				<Switch>
+					<Route
+						exact
+						path='/'
+						render={props => (
+							<Fragment>
+								<Search
+									searchUsers={searchUsers}
+									clearUsers={clearUsers}
+									setAlert={setAlert}
+									closeAlert={closeAlert}
 								/>
-							)}
-						/>
-					</Switch>
-				</div>
+								<Users
+									searched={searched}
+									users={users}
+									loading={loading}
+									mainFetch={loadMore}
+								/>
+							</Fragment>
+						)}
+					/>
+					<Route exact path='/about' component={About} />
+					<Route
+						path='/users/:login'
+						render={props => (
+							<IndividualUser
+								{...props}
+								user={user}
+								user_repos={user_repos}
+								getUserRepos={getUserRepos}
+								getUser={getUser}
+								loading={loading}
+							/>
+						)}
+					/>
+				</Switch>
 			</div>
-		)
-	}
+		</div>
+	)
 }
 
 // let splittedLink = res.headers.link.split(' ')[0]

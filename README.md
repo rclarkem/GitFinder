@@ -6,10 +6,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Technologies
 
-- React
-- Font Awesome
+- [React](https://reactjs.org/docs/getting-started.html)
+- [Font Awesome](https://fontawesome.com/start)
 - Custom CSS
-- Github API
+- [Github API](https://developer.github.com/v3/)
 
 ## Project Description
 

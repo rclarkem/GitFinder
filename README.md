@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
 
 # GitFinder
 
@@ -15,7 +15,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Overview:
 
-This project was a part of the Brad Traversy React Front to Back Course. I added my own features to it such as a **_load more_** button to fetch more users on the home page. Created custom functions that customize how I wanted the UI to look such as the badge displays.
+This project was a part of the Brad Traversy React Front to Back Course. I added my own features to it such as a **_load more_** button to fetch more users on the home page. Created my own custom functions that customizes how I wanted the UI to look such as the badge displays.
 
 ## Instructions for Cloning Repo
 

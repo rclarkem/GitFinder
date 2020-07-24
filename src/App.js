@@ -24,7 +24,7 @@ export default function App() {
 		setLoading(true)
 		const fetchData = async () => {
 			const res = await axios.get(
-				`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`,
+				`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`
 			)
 			setDefaultUsers(res.data)
 			setUsers(res.data)
@@ -35,20 +35,20 @@ export default function App() {
 	}, [])
 
 	// These two functions help iterate through Github API for loadMore() function and mainFetch()
-	const splitLink = linkAdd => {
+	const splitLink = (linkAdd) => {
 		let splittedLink = linkAdd.headers.link.split(' ')[0]
 		let index = splittedLink.indexOf('since') + 5
 		let num = splittedLink.slice([index + 1], -2)
 		return num
 	}
 
-	const relativeLinkTrue = linkAdd => {
+	const relativeLinkTrue = (linkAdd) => {
 		return linkAdd.headers.link.split(' ')[1]
 	}
 
 	const mainFetch = async () => {
 		const res = await axios.get(
-			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`,
+			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`
 		)
 		let potentialPageNum = splitLink(res)
 		let relLink = relativeLinkTrue(res)
@@ -61,21 +61,21 @@ export default function App() {
 
 	// Load more users on the default page
 	const loadMore = () => {
-		setPage(prevPage => prevPage.page)
+		setPage((prevPage) => prevPage.page)
 		mainFetch()
 		fetch(
-			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`,
+			`https://api.github.com/users?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}&since=${page}`
 		)
-			.then(response => response.json())
-			.then(response => {
+			.then((response) => response.json())
+			.then((response) => {
 				setUsers([...users, ...response])
 			})
 	}
 
-	const searchUsers = async searchTerm => {
+	const searchUsers = async (searchTerm) => {
 		setLoading(true)
 		const response = await axios.get(
-			`https://api.github.com/search/users?q=${searchTerm}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+			`https://api.github.com/search/users?q=${searchTerm}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
 		)
 		setUsers(response.data.items)
 		setLoading(false)
@@ -89,19 +89,19 @@ export default function App() {
 		setSearched(false)
 	}
 
-	const getUser = async username => {
+	const getUser = async (username) => {
 		setLoading(true)
 		const response = await axios.get(
-			`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+			`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
 		)
 		setUser(response.data)
 		setLoading(false)
 	}
 
-	const getUserRepos = async username => {
+	const getUserRepos = async (username) => {
 		setLoading(true)
 		const response = await axios.get(
-			`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+			`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
 		)
 		setUserRepos(response.data)
 		setLoading(false)
@@ -116,6 +116,8 @@ export default function App() {
 		setAlertState(null)
 	}
 
+	console.log(user)
+
 	return (
 		<div className='App'>
 			<NavBar />
@@ -125,7 +127,7 @@ export default function App() {
 					<Route
 						exact
 						path='/'
-						render={props => (
+						render={(props) => (
 							<Fragment>
 								<Search
 									searchUsers={searchUsers}
@@ -145,7 +147,7 @@ export default function App() {
 					<Route exact path='/about' component={About} />
 					<Route
 						path='/users/:login'
-						render={props => (
+						render={(props) => (
 							<IndividualUser
 								{...props}
 								user={user}

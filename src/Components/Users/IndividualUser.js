@@ -11,7 +11,7 @@ const IndividualUser = ({ user, user_repos, getUserRepos, getUser, loading, matc
 		// eslint-disable-next-line
 	}, [])
 
-	const countBadges = type => {
+	const countBadges = (type) => {
 		if (user[type] > 10000) {
 			return user[type].toString().slice(0, 2) + 'k'
 		} else if (user[type] > 100000) {
@@ -43,6 +43,7 @@ const IndividualUser = ({ user, user_repos, getUserRepos, getUser, loading, matc
 		return <Spinner />
 	}
 
+	// console.log(countBadges('followers'))
 	return (
 		<Fragment>
 			<Link to='/' className='btn btn-light'>
@@ -62,8 +63,7 @@ const IndividualUser = ({ user, user_repos, getUserRepos, getUser, loading, matc
 						href={html_url}
 						target='_blank'
 						rel='noopener noreferrer'
-						className='btn btn-dark my-1'
-					>
+						className='btn btn-dark my-1'>
 						Vist Github Profile
 					</a>
 				</div>
@@ -111,14 +111,10 @@ const IndividualUser = ({ user, user_repos, getUserRepos, getUser, loading, matc
 				</div>
 			</div>
 			<div className='card text-center'>
-				<div className='badge badge-primary'>Followers: {this.countBadges('followers')}</div>
-				<div className='badge badge-success'>Following: {this.countBadges('following')}</div>
-				<div className='badge badge-white'>
-					Public Repos: {this.countBadges('public_repos')}
-				</div>
-				<div className='badge badge-dark'>
-					Public Gists: {this.countBadges('public_gists')}
-				</div>
+				<div className='badge badge-primary'>Followers: {countBadges('followers')}</div>
+				<div className='badge badge-success'>Following: {countBadges('following')}</div>
+				<div className='badge badge-white'>Public Repos: {countBadges('public_repos')}</div>
+				<div className='badge badge-dark'>Public Gists: {countBadges('public_gists')}</div>
 			</div>
 			<Repos repos={user_repos} />
 		</Fragment>

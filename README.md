@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Demo Video
 
+![DemoGif1](https://github.com/rclarkem/GitFinder/blob/master/public/gitfinder1.gif)
+
 ## Technologies
 
 - [React](https://reactjs.org/docs/getting-started.html)
